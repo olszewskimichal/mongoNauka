@@ -24,7 +24,7 @@ class CustomerRepositoryTest extends Specification {
 
     def 'should persist new customer to mongo db'() {
         given:
-        Customer customer = new Customer("id", "firstName", "lastName")
+        Customer customer = new Customer("firstName", "lastName")
         when:
         repository.save(customer)
         then:
@@ -33,16 +33,16 @@ class CustomerRepositoryTest extends Specification {
 
     def 'should find customer by id'() {
         given:
-        mongoTemplate.insert(new Customer("3", "adam", "ewa"))
+        def insert = mongoTemplate.insert(new Customer("adam", "ewa"))
         when:
-        def findById = repository.getById("3")
+        def findById = repository.getById(insert.id)
         then:
         findById.isPresent()
     }
 
     def 'should find customer by lastName'() {
         given:
-        mongoTemplate.insert(new Customer("3", "adam", "boniek"))
+        mongoTemplate.insert(new Customer("adam", "boniek"))
         when:
         def findById = repository.findByLastName("boniek")
         then:
@@ -51,7 +51,7 @@ class CustomerRepositoryTest extends Specification {
 
     def 'should find customer by name'() {
         given:
-        mongoTemplate.insert(new Customer("3", "adam", "boniek"))
+        mongoTemplate.insert(new Customer("adam", "boniek"))
         when:
         def findById = repository.findByFirstName("adam")
         then:
