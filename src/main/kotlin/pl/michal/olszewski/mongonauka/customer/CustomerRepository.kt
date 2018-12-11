@@ -10,10 +10,15 @@ interface CustomerRepository : MongoRepository<Customer, String> {
 
     @Query("{ 'firstName' : ?0 }")
     fun findByFirstName(firstName: String): List<Customer>
+
     @Query("{ 'id' : ?0 }")
     fun getById(id: String): Optional<Customer>
+
     @Query("{ 'lastName' : ?0 }")
     fun findByLastName(lastName: String): List<Customer>
+
+    @Query("{ 'firstName' : { \$regex: ?0 } }")
+    fun findUsersByRegexpFirstName(regexp: String): List<Customer>
 
 
 }

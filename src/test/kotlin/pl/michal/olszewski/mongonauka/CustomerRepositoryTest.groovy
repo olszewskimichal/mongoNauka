@@ -58,5 +58,26 @@ class CustomerRepositoryTest extends Specification {
         findById.size() == 1
     }
 
+    @Unroll
+    def 'should find #result customer by regex #search'() {
+        given:
+        mongoTemplate.insert(new Customer("Adam", "boniek"))
+        mongoTemplate.insert(new Customer("Adolf", "boniek"))
+        mongoTemplate.insert(new Customer("Zbigniew", "boniek"))
+
+        when:
+        def findById = repository.findUsersByRegexpFirstName(search)
+        then:
+        findById.size() == result
+        where:
+        search | result
+        "A+"   | 2
+        "ZB"   | 0
+        "Zb"   | 1
+        "adolf" | 0
+        "[a-z]" | 3
+
+    }
+
 
 }

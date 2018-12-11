@@ -5,7 +5,7 @@ import org.springframework.data.mongodb.core.mapping.Document
 
 
 @Document
-class Customer(var firstName: String, var lastName: String) {
+data class Customer(var firstName: String, var lastName: String) {
     @Id
     var id: String? = null
 }
