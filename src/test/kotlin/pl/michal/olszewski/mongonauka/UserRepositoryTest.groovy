@@ -2,6 +2,7 @@ package pl.michal.olszewski.mongonauka
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest
+import org.springframework.data.domain.Sort
 import org.springframework.data.mongodb.core.MongoTemplate
 import pl.michal.olszewski.mongonauka.users.User
 import pl.michal.olszewski.mongonauka.users.UserRepository
@@ -93,6 +94,19 @@ class UserRepositoryTest extends Specification {
         user.id != null
         user.age == null
         user.name != null
+    }
+
+    def 'should return user by age order by name'() {
+        given:
+        mongoTemplate.insert(new User("Adam", 19))
+        mongoTemplate.insert(new User("Zenek", 19))
+        mongoTemplate.insert(new User("Ewa", 19))
+        mongoTemplate.insert(new User("Bogdan", 20))
+
+        when:
+        def list = repository.findByAgeOrderBy(19, new Sort(Sort.Direction.ASC, "name"))
+        then:
+        list == [new User("Adam", 19), new User("Ewa", 19), new User("Zenek", 19)]
     }
 
 

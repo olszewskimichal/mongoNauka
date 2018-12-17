@@ -1,5 +1,6 @@
 package pl.michal.olszewski.mongonauka.users
 
+import org.springframework.data.domain.Sort
 import org.springframework.data.mongodb.repository.MongoRepository
 import org.springframework.data.mongodb.repository.Query
 import org.springframework.stereotype.Repository
@@ -24,4 +25,7 @@ interface UserRepository : MongoRepository<User, String> {
 
     @Query("{age : ?0 }", fields = "{_id:1,name:1}")
     fun findByAgeJustReturnNameAndId(age: Int): User
+
+    @Query("{age : ?0}")
+    fun findByAgeOrderBy(age: Int, sort: Sort): List<User>
 }
