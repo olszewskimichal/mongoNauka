@@ -71,7 +71,17 @@ class UserRepositoryTest extends Specification {
         when:
         def users = repository.findUserByNameAndAge "Michał", 14
         then:
-        users.size()==1
+        users.size() == 1
+    }
+
+    def 'should find user by name or age'() {
+        given:
+        mongoTemplate.insert(new User("Adam", 14))
+        mongoTemplate.insert(new User("Michał", 15))
+        when:
+        def users = repository.findUserByNameOrAge "Michał", 14
+        then:
+        users.size() == 2
     }
 
 }
