@@ -21,4 +21,7 @@ interface UserRepository : MongoRepository<User, String> {
 
     @Query("{'\$or' : [{'name' : ?0}, {'age' : ?1}]}")
     fun findUserByNameOrAge(name: String, age: Int): List<User>
+
+    @Query("{age : ?0 }", fields = "{_id:1,name:1}")
+    fun findByAgeJustReturnNameAndId(age: Int): User
 }

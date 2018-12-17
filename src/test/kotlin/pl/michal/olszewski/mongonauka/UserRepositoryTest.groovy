@@ -84,4 +84,16 @@ class UserRepositoryTest extends Specification {
         users.size() == 2
     }
 
+    def 'should return only name and id'() {
+        given:
+        mongoTemplate.insert(new User("Zenek", 19))
+        when:
+        def user = repository.findByAgeJustReturnNameAndId(19)
+        then:
+        user.id != null
+        user.age == null
+        user.name != null
+    }
+
+
 }
