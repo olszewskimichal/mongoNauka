@@ -102,6 +102,17 @@ class UserFinderTest extends Specification {
         list == [new User("Adam", 19), new User("Ewa", 19), new User("Zenek", 19)]
     }
 
+    def 'should return true when user by id exists'() {
+        given:
+        def user = mongoTemplate.insert(new User("Adam3", 19))
+
+        when:
+        def byId = finder.existsById(user.id)
+
+        then:
+        byId
+    }
+
     def 'should find all users from DB'() {
         given:
         mongoTemplate.insert(new User("Adam", 19))
