@@ -126,5 +126,18 @@ class UserFinderTest extends Specification {
         users.size() == 3
     }
 
+    def 'should count all users from DB'() {
+        given:
+        mongoTemplate.insert(new User("Adam2", 19))
+        mongoTemplate.insert(new User("Zenek2", 19))
+        mongoTemplate.insert(new User("Ewa2", 19))
+
+        when:
+        def usersCount = finder.count()
+
+        then:
+        usersCount == 3
+    }
+
 
 }
