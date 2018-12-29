@@ -1,4 +1,4 @@
-package pl.michal.olszewski.mongonauka.aggregation
+package pl.michal.olszewski.mongonauka.aggregation.invoice
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.mongodb.core.MongoTemplate

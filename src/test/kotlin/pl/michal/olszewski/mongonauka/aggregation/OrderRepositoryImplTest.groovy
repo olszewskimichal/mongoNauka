@@ -2,6 +2,9 @@ package pl.michal.olszewski.mongonauka.aggregation
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import pl.michal.olszewski.mongonauka.aggregation.invoice.LineItem
+import pl.michal.olszewski.mongonauka.aggregation.invoice.Order
+import pl.michal.olszewski.mongonauka.aggregation.invoice.OrderRepository
 import spock.lang.Specification
 
 import static spock.util.matcher.HamcrestMatchers.closeTo

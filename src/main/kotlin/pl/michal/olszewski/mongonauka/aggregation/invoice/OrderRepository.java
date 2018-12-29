@@ -1,4 +1,4 @@
-package pl.michal.olszewski.mongonauka.aggregation;
+package pl.michal.olszewski.mongonauka.aggregation.invoice;
 
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
