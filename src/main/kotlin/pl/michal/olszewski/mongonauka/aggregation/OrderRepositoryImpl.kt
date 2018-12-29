@@ -1,8 +1,9 @@
 package pl.michal.olszewski.mongonauka.aggregation
 
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.data.mongodb.core.MongoOperations
+import org.springframework.data.mongodb.core.MongoTemplate
 import org.springframework.data.mongodb.core.aggregation.Aggregation.*
+import org.springframework.data.mongodb.core.aggregation.MatchOperation
 import org.springframework.data.mongodb.core.query.Criteria.where
 import org.springframework.stereotype.Component
 
@@ -11,7 +12,7 @@ import org.springframework.stereotype.Component
 internal class OrderRepositoryImpl : OrderRepositoryCustom {
 
     @Autowired
-    private lateinit var operations: MongoOperations
+    private lateinit var operations: MongoTemplate
 
     private val taxRate = 0.19
 
@@ -24,20 +25,24 @@ internal class OrderRepositoryImpl : OrderRepositoryCustom {
      */
     override fun getInvoiceFor(order: Order): InvoiceDTO? {
 
-        val results = operations.aggregate(newAggregation(Order::class.java, //
-                match(where("id").`is`(order.id)), //
+        val results = operations.aggregate(newAggregation(
+                matchForId(order.id), //
                 unwind("items"), //
                 project("id", "customerId", "items") //
                         .andExpression("'\$items.price' * '\$items.quantity'").`as`("lineTotal"), //
                 group("id") //
+                        .first("id").`as`("orderId")
                         .sum("lineTotal").`as`("netAmount") //
                         .addToSet("items").`as`("items"), //
-                project("id", "items", "netAmount") //
-                        .and("orderId").previousOperation() //
+                project("orderId", "items", "netAmount") //
                         .andExpression("netAmount * [0]", taxRate).`as`("taxAmount") //
                         .andExpression("netAmount * (1 + [0])", taxRate).`as`("totalAmount") //
-        ), InvoiceDTO::class.java)
+        ), Order::class.java, InvoiceDTO::class.java)
 
         return results.uniqueMappedResult
+    }
+
+    fun matchForId(id: String?): MatchOperation {
+        return match(where("id").`is`(id))
     }
 }

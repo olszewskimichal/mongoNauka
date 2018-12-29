@@ -22,6 +22,7 @@ class OrderRepositoryImplTest extends Specification {
         repository.save(order)
         when:
         def invoiceFor = repository.getInvoiceFor(order)
+        println(invoiceFor)
         then:
         invoiceFor != null
         invoiceFor.orderId == order.id

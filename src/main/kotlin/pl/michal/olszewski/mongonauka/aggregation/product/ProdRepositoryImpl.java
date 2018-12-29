@@ -43,7 +43,6 @@ class ProdRepositoryImpl implements ProdAggregationRepository {
 
   private GroupOperation getGroupOperation() {
     return group("warehouse")
-        .first("warehouse").as("warehouse")
         .addToSet("id").as("productIds")
         .count().as("countProducts")
         .avg("price").as("averagePrice")
