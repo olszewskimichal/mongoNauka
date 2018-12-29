@@ -35,8 +35,10 @@ internal class OrderRepositoryImpl : OrderRepositoryCustom {
                         .sum("lineTotal").`as`("netAmount") //
                         .addToSet("items").`as`("items"), //
                 project("orderId", "items", "netAmount") //
-                        .andExpression("netAmount * [0]", taxRate).`as`("taxAmount") //
-                        .andExpression("netAmount * (1 + [0])", taxRate).`as`("totalAmount") //
+                        .and("netAmount").multiply(1+taxRate).`as`("totalAmount")
+                        .and("netAmount").multiply(taxRate).`as`("taxAmount")
+                        //.andExpression("netAmount * [0]", taxRate).`as`("taxAmount") //
+                        //.andExpression("netAmount * (1 + [0])", taxRate).`as`("totalAmount") //
         ), Order::class.java, InvoiceDTO::class.java)
 
         return results.uniqueMappedResult
