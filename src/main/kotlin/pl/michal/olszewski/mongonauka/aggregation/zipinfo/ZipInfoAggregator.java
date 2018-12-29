@@ -10,6 +10,8 @@ import static org.springframework.data.mongodb.core.aggregation.Aggregation.sort
 import java.util.List;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.ConditionalOperators;
+import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -45,6 +47,19 @@ class ZipInfoAggregator {
     return mongoTemplate.aggregate(Aggregation.newAggregation(
         group("state").sum("population").as("totalPop"),
         project("totalPop").and("state").previousOperation(),
+        sort(ASC, previousOperation(), "totalPop")
+    ), ZipInfo.class, StateStats.class).getMappedResults();
+  }
+
+  List<StateStats> conditionAggregateStateStats() {
+    return mongoTemplate.aggregate(Aggregation.newAggregation(
+        group("state").sum("population").as("totalPop"),
+        project("totalPop")
+            .and("conditionalPop")
+              .applyCondition(ConditionalOperators.when(Criteria.where("totalPop").gte(35))
+                  .then(99999)
+                  .otherwise(-1))
+            .and("state").previousOperation(),
         sort(ASC, previousOperation(), "totalPop")
     ), ZipInfo.class, StateStats.class).getMappedResults();
   }

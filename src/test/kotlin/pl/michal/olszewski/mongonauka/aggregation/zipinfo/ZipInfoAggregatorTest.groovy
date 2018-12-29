@@ -48,6 +48,16 @@ class ZipInfoAggregatorTest extends Specification {
         stateStats.size() == 2
     }
 
+    def 'should aggregate population for states with condition'() {
+        given:
+        saveZipInfos()
+        when:
+        def stateStats = aggregator.conditionAggregateStateStats()
+        println(stateStats)
+        then:
+        stateStats.size() == 2
+    }
+
     def saveZipInfos() {
         mongoTemplate.insert(new ZipInfo("city1", "state1", 12))
         mongoTemplate.insert(new ZipInfo("city1", "state1", 13))
